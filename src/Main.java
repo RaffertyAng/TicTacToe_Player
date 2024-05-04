@@ -38,10 +38,11 @@ class Main {
         }
 
         char player = 'X';
-        boolean gameOver = false;
+        boolean gameWon = false;
+        boolean gameDrawn = false;
         Scanner moveInput = new Scanner(System.in);
 
-        while (!gameOver) {
+        while (!gameWon && !gameDrawn) {
             printBoard(board);
             System.out.println("Player " + player + " to move ");
 
@@ -66,11 +67,14 @@ class Main {
             }
             System.out.println();
 
-            if (board[col - 1][row - 1] == ' ') {
-                board[col - 1][row - 1] = player; // place the element
-                gameOver = isGameOver(board, player);
-                if (gameOver) {
+            if (board[row - 1][col - 1] == ' ') {
+                board[row - 1][col - 1] = player; // place the element
+                gameWon = isGameWon(board, player);
+                gameDrawn = isGameDrawn(board);
+                if (gameWon) {
                     System.out.println("Player " + player + " wins! ");
+                } else if (gameDrawn) {
+                    System.out.println("Game ends in a draw! ");
                 } else {
                     player = (player == 'X') ? 'O' : 'X';
                 }
@@ -90,7 +94,7 @@ class Main {
         System.out.println();
     }
 
-    public static boolean isGameOver(char[][] board, char player) {
+    public static boolean isGameWon(char[][] board, char player) {
         // check the rows
         for (int row = 0; row < board.length; row++) {
             if (board[row][0] == player && board[row][1] == player && board[row][2] == player) {
@@ -114,6 +118,17 @@ class Main {
             return true;
         }
         return false;
+    }
+
+    public static boolean isGameDrawn(char[][] board) {
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[row][col] == ' ') {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public static void printBoard(char[][] board) {
